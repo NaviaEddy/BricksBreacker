@@ -10,3 +10,7 @@ Realizado en la Universidad San Francisco Xavier de Chuquisaca USFX, en la mater
 Se implemento uso pilares de POO, Abstracción, Encapsulamiento, Herencia, Polimorfismo, Patrones de Diseño.
 
 ![Bricks Breacker 1](https://user-images.githubusercontent.com/102325124/213114795-047d208a-a327-43a5-acb4-53299503781f.jpg)
+
+# DOCUMENTACION 
+
+[Documentacion Bricks Breacker.pdf](https://github.com/NaviaEddy/BricksBreacker/files/10446750/Documentacion.Bricks.Breacker.pdf)
