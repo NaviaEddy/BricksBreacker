@@ -57,7 +57,7 @@ APaddle::APaddle()
 	Winner = 0;
 	Score = 0;
 	CheckWinner = true;
-	Disparo = true;
+	Disparo = false;
 }
 
 // Called when the game starts or when spawned
