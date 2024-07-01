@@ -4,7 +4,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "LevelInterfaces.h"
+#include "Brick.h"
+#include "BrickDoubleHit.h"
+#include "BrickShot.h"
 #include "LevelBricks.generated.h"
+class ABrik;
+class ABrickDoubleHit;
+class ABrickShot;
 
 UCLASS()
 class ARKANOID_API ALevelBricks : public AActor, public ILevelInterfaces
@@ -17,11 +23,20 @@ public:
 
 private:
 
-	class ABrick* Brick; //Brick normal
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<ABrick> BPBrickClass;
 
-	class ABrickDoubleHit* BrickDouble; //Brick indestructible
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<ABrickDoubleHit> BPBrickDoubleHitClass;
 
-	class ABrickShot* BrickShot; //Brick de disparo
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<ABrickShot> BPBrickShotClass;
+
+	ABrick* Brick; //Brick normal
+
+	ABrickDoubleHit* BrickDouble; //Brick indestructible
+
+	ABrickShot* BrickShot; //Brick de disparo
 
 
 protected:

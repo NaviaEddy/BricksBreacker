@@ -15,6 +15,7 @@
 #include "ShotCapsule.h"
 #include "Brick.h"
 #include "BrickShield_.h"
+#include "ArkanoidGameModeBase.h"
 
 // Sets default values
 APaddle::APaddle()
@@ -44,6 +45,14 @@ APaddle::APaddle()
 	FloatingMovement->Acceleration = 2500.0f;
 	FloatingMovement->Deceleration = 2500.0f;
 
+
+	// Encuentra la clase del Blueprint y asigna la referencia
+	static ConstructorHelpers::FClassFinder<ABrickShield_> BPBrickShieldClassFinder(TEXT("/Game/BluePrints/BPBrickShield_"));
+	if (BPBrickShieldClassFinder.Succeeded())
+	{
+		BPBrickShield_ = BPBrickShieldClassFinder.Class;
+	}
+
 	FireSound = FireAudio.Object;
 	BounceSound = BounceAudio.Object;
 
@@ -65,6 +74,7 @@ void APaddle::BeginPlay()
 {
 	Super::BeginPlay();
 	SM_Paddle->OnComponentBeginOverlap.AddDynamic(this, &APaddle::OnOverlapBeginPaddle);
+	GMB = Cast<AArkanoidGameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
 void APaddle::OnOverlapBeginPaddle(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -85,7 +95,6 @@ void APaddle::OnOverlapBeginPaddle(UPrimitiveComponent* OverlappedComp, AActor* 
 		if (Capsule->GetIntCapsuleHelps() == 4) { // Capsule de Three Ball
 			Controller = Cast<APaddle_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 			Controller->SpawnThreeBall();
-			Controller->LaunchThree();
 		}
 
 		if (Capsule->GetIntCapsuleHelps() == 1) { // Capsule de elongation
@@ -96,7 +105,6 @@ void APaddle::OnOverlapBeginPaddle(UPrimitiveComponent* OverlappedComp, AActor* 
 		if (Capsule->GetIntCapsuleHelps() == 5) { // Capsule de two ball
 			Controller = Cast<APaddle_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 			Controller->SpawnTwoBall();
-			Controller->LaunchTwo();
 		}
 
 		if (Capsule->GetIntCapsuleHelps() == 3) { // Capsule Shot
@@ -110,9 +118,13 @@ void APaddle::OnOverlapBeginPaddle(UPrimitiveComponent* OverlappedComp, AActor* 
 		}
 
 		if (Capsule->GetIntCapsuleHelps() == 6) { //Bricks reforzados
-			FVector LocationCapsule(0.0f, 0.0f, 60.0f);
-			Reinforced = GetWorld()->SpawnActor<ABrickShield_>(LocationCapsule, FRotator::ZeroRotator);
-			GetWorldTimerManager().SetTimer(UnusedHandle, this, &APaddle::DestroyReinforced, 5.0f, false);
+			FVector LocationCapsule(3.1f, 0.0f, 9.2);
+			Reinforced = GetWorld()->SpawnActor<ABrickShield_>(BPBrickShield_, LocationCapsule, FRotator::ZeroRotator);
+			if (Reinforced) {
+				ReinforcedBricks.Add(Reinforced); 
+
+				GetWorldTimerManager().SetTimer(UnusedHandle, this, &APaddle::DestroyReinforced, 5.0f, false);
+			}
 		}
 
 		//Capsulas de antiayuda
@@ -168,7 +180,11 @@ void APaddle::NormalFire()
 
 void APaddle::DestroyReinforced()
 {
-	Reinforced->Destroy();
+	if (Reinforced) {
+		Reinforced->Destroy();
+		ReinforcedBricks.Remove(Reinforced);
+		Reinforced = nullptr;
+	}
 }
 
 void APaddle::LevelUp(int Up)
@@ -249,8 +265,12 @@ void APaddle::Tick(float DeltaTime)
 	}
 
 	if (Brick->GetBricksLevel() == 0 && CheckWinner == true) {
-		LevelUp(1);
+		GMB->SetTimerLevel(0.0f);
 		CheckWinner = false;
+	}
+
+	if (CheckWinner == false && GMB->GetTimerLevel() >= 4.0f) {
+		LevelUp(1);
 	}
 
 }

@@ -20,6 +20,8 @@ public:
 
 	bool BallLaunched;
 
+	FVector BallVelocity;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,11 +32,25 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UProjectileMovementComponent* ProjectileMovement; //Movimiento del proyectil
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCapsuleComponent* Collision;	//Campo de colision
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UCapsuleComponent* CollisionBall;	//Campo de colision
 
 	float SpeedModifierOnBounce = 1.02f; //Modificador de velocidad
 
+private:
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult); //Cuando colisiona
+
+	UFUNCTION()
+		FVector CalculateReflectionVelocity(const FVector& CurrentVelocity, const FVector& SurfaceNormal); //Calculo de la velocidad de rebote
+
+	UFUNCTION()
+		void SetVelocity(const FVector& NewVelocity); //Establecer la velocidad
+
+	UFUNCTION()
+	void EnableCollision();
+
+	bool bCanCollide;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

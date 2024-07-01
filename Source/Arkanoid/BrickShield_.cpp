@@ -15,7 +15,7 @@ ABrickShield_::ABrickShield_()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> BrickShieldMesh(TEXT("StaticMesh'/Game/Assets/Meshes/SM_Brick.SM_Brick'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> BrickShieldMesh(TEXT("StaticMesh'/Game/Assets/Meshes/Brick_Mesh/Brick_Mesh.Brick_Mesh'"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialShield(TEXT("Material'/Game/Assets/Materials/ColorRandom.ColorRandom'"));
 	static ConstructorHelpers::FObjectFinder<USoundBase> BounceAudio(TEXT("SoundWave'/Game/Maps/Menu/Sound/Bounce.Bounce'"));
 

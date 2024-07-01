@@ -31,8 +31,8 @@ void AGame::SetLevel(AActor* Level)
 	LevelBuilder = Cast<ILevelBuilder>(Level);
 
 	if (!LevelBuilder) { //Lanzamos un error si la conversion falla
-		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("¡Elenco no válido! Consulte Registro de salida para obtener más detalles."));
-		UE_LOG(LogTemp, Error, TEXT("SetLevel(): ¡El actor no es un LevelBuilder! ¿Está seguro de que el actor implementa esa interfaz?"));
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("ï¿½Elenco no vï¿½lido! Consulte Registro de salida para obtener mï¿½s detalles."));
+		UE_LOG(LogTemp, Error, TEXT("SetLevel(): ï¿½El actor no es un LevelBuilder! ï¿½Estï¿½ seguro de que el actor implementa esa interfaz?"));
 	}
 }
 
@@ -40,7 +40,7 @@ void AGame::ConstructOfLevels(int _Level)
 {
 	//Registrar si el constructor es NULL
 	if (!LevelBuilder) {
-		UE_LOG(LogTemp, Error, TEXT("ConstructLevel1(): LevelBuilder es NULL, asegúrese de que este inicializado."));
+		UE_LOG(LogTemp, Error, TEXT("ConstructLevel1(): LevelBuilder es NULL, asegï¿½rese de que este inicializado."));
 		return;
 	}
 	else {

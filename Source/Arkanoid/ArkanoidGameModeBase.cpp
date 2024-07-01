@@ -16,6 +16,7 @@ AArkanoidGameModeBase::AArkanoidGameModeBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpawnCapsuleAntiHelp = 0.0f;
+	TimerNiveles = 0.0f;
 	Difficulty = 10.0f;
 
 	CheckerLevel1 = true;
@@ -35,7 +36,7 @@ void AArkanoidGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	APaddle* Paddle = Cast<APaddle>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	Paddle->RestoreLevel(1); //Restaurador de nivel
+	Paddle->RestoreLevel(3); //Restaurador de nivel
 
 	LevelCreator = GetWorld()->SpawnActor<ALevelCreator>(ALevelCreator::StaticClass());
 	Game = GetWorld()->SpawnActor<AGame>(AGame::StaticClass());
@@ -43,14 +44,10 @@ void AArkanoidGameModeBase::BeginPlay()
 	
 }
 
-void AArkanoidGameModeBase::DifficultyIncrease(float time)
-{
-	Difficulty = time;
-}
-
 void AArkanoidGameModeBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	TimerNiveles += DeltaSeconds;
 
 	APaddle* Paddle = Cast<APaddle>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	APaddle_PlayerController* Controller = Cast<APaddle_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
@@ -60,65 +57,103 @@ void AArkanoidGameModeBase::Tick(float DeltaSeconds)
 		CheckerLevel1 = false;
 	}
 
-	if (Paddle->GetLevel() == 2 && CheckerLevel2 == true) {
+	if (Paddle->GetLevel() == 2 && CheckerLevel2 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(2);
 		CheckerLevel2 = false;
 	}
 
-	if (Paddle->GetLevel() == 3 && CheckerLevel3 == true) {
+	
+
+	if (Paddle->GetLevel() == 3 && CheckerLevel3 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(3);
 		CheckerLevel3 = false;
 	}
 
-	if (Paddle->GetLevel() == 4 && CheckerLevel4 == true) {
+	if (Paddle->GetLevel() == 4 && CheckerLevel4 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(4);
 		CheckerLevel4 = false;
 	}
 
-	if (Paddle->GetLevel() == 5 && CheckerLevel5 == true) {
+	if (Paddle->GetLevel() == 5 && CheckerLevel5 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(5);
 		CheckerLevel5 = false;
 	}
 
-	if (Paddle->GetLevel() == 6 && CheckerLevel6 == true) {
+	if (Paddle->GetLevel() == 6 && CheckerLevel6 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(6);
 		CheckerLevel6 = false;
 	}
 
-	if (Paddle->GetLevel() == 7 && CheckerLevel7 == true) {
+	if (Paddle->GetLevel() == 7 && CheckerLevel7 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(7);
 		CheckerLevel7 = false;
 	}
 
-	if (Paddle->GetLevel() == 8 && CheckerLevel8 == true) {
+	if (Paddle->GetLevel() == 8 && CheckerLevel8 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(8);
 		CheckerLevel8 = false;
 	}
 
-	if (Paddle->GetLevel() == 9 && CheckerLevel9 == true) {
+	if (Paddle->GetLevel() == 9 && CheckerLevel9 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(9);
 		CheckerLevel9 = false;
 	}
 
-	if (Paddle->GetLevel() == 10 && CheckerLevel10 == true) {
+	if (Paddle->GetLevel() == 10 && CheckerLevel10 == true && GetTimerLevel() >= 2.0f) {
 		Controller->DestroyBall();
 		Controller->SpawnNewBall();
+		Paddle->DestroyReinforced();
+		Paddle->NormalFire();
+		Paddle->NormalScale();
+		Paddle->NormalVelocity();
 		Game->ConstructOfLevels(10);
 		CheckerLevel10 = false;
 	}
@@ -153,6 +188,16 @@ void AArkanoidGameModeBase::Tick(float DeltaSeconds)
 
 	}
 	
+}
+
+void AArkanoidGameModeBase::SetTimerLevel(float _concluidLevel)
+{
+	TimerNiveles = _concluidLevel;
+}
+
+float AArkanoidGameModeBase::GetTimerLevel()
+{
+	return TimerNiveles;
 }
 
 	

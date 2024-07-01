@@ -12,7 +12,7 @@
 #include "ThreeBall.h"
 #include "HelpCapsules.h"
 
-static int BricksLevel = 70;
+static int BricksLevel;
 
 // Sets default values
 ABrick::ABrick()
@@ -20,17 +20,19 @@ ABrick::ABrick()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> BrickMesh(TEXT("StaticMesh'/Game/Assets/Meshes/SM_Brick.SM_Brick'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> BrickMesh(TEXT("StaticMesh'/Game/Assets/Meshes/Brick_Mesh/Brick_Mesh.Brick_Mesh'"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialMesh(TEXT("Material'/Game/Assets/Materials/ColorRandom.ColorRandom'"));
 	static ConstructorHelpers::FObjectFinder<USoundBase> BounceAudio(TEXT("SoundWave'/Game/Maps/Menu/Sound/Bounce.Bounce'"));
 
 	SM_Brick = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Brick"));
+	SM_Brick->SetRelativeLocation(FVector(0.0f, 0.0f, -9.0f));
 	SM_Brick->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	SM_Brick->SetStaticMesh(BrickMesh.Object);
 	SetRootComponent(SM_Brick);
 
 	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
-	Collision->SetBoxExtent(FVector(25.5f, 12.0f, 12.0f));
+	Collision->SetBoxExtent(FVector(25.5f, 12.0f, 10.0f));
+	Collision->SetRelativeLocation(FVector(0.0f, 0.0f, 9.0f));
 	Collision->SetupAttachment(GetRootComponent());
 
 	BounceSound = BounceAudio.Object;
@@ -89,10 +91,10 @@ void ABrick::NotifyActorBeginOverlap(AActor* OtherActor)
 			UGameplayStatics::PlaySoundAtLocation(this, BounceSound, GetActorLocation());
 		}
 
-		ABall* MyBall = Cast<ABall>(OtherActor);
+		/*ABall* MyBall = Cast<ABall>(OtherActor);
 		FVector BallVelocity = MyBall->GetVelocity();
 		BallVelocity *= (SpeedModifierOnBounce - 1.0f);
-		MyBall->GetBall()->SetPhysicsLinearVelocity(BallVelocity, true);
+		MyBall->GetBall()->SetPhysicsLinearVelocity(BallVelocity, true);*/
 
 		FTimerHandle UnusedHandle;
 		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABrick::DestroyBrick, 0.1f, false);
@@ -116,7 +118,12 @@ void ABrick::CreateCapsule(FVector Location)
 void ABrick::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime); 
-	HabilitadoCreacionCapsulas = FMath::FRandRange(0, 9) <= 4 ? true : false;
+	HabilitadoCreacionCapsulas = FMath::FRandRange(0, 9) <= 3 ? true : false;
+	// Aquí deberías tener la cadena de formato que incluye "%d" dentro de ella
+	//FString Mensaje = FString::Printf(TEXT("BricksLevel: %d"), BricksLevel);
+
+	// Llama a la función AddOnScreenDebugMessage para mostrar el mensaje en pantalla
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, Mensaje);
 
 }
 

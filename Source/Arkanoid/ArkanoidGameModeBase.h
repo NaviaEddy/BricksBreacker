@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "ArkanoidGameModeBase.generated.h"
-
 /**
  * 
  */
@@ -32,6 +31,7 @@ protected:
 		class ALevelBricks* LevelBricks; //Puntero a creador de niveles
 
 	UPROPERTY()
+		float TimerNiveles;
 		float Difficulty;
 
 	bool CheckerLevel1; //Verificador de nivel 1
@@ -47,13 +47,12 @@ protected:
 
 public:
 
-	void DifficultyIncrease(float time); //Incremenento de dificultad (proxima actualizacion)
-
 	virtual void Tick(float DeltaSeconds) override;
+
+	void SetTimerLevel(float _TimerLevel);
+	float GetTimerLevel();
 	
 private:
 
 	float SpawnCapsuleAntiHelp; //Tiempo de spawn de capsula
-
-
 };

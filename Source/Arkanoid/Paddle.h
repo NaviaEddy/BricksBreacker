@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Paddle.generated.h"
- 
+class ABrickShield_;
+
 UCLASS()
 class ARKANOID_API APaddle : public APawn
 {
@@ -23,6 +24,7 @@ protected:
 	UFUNCTION() //Notificacion de la colision
 		void OnOverlapBeginPaddle(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+public:
 	void NormalScale(); //Paddle de caracteristicas base
 	void NormalVelocity(); //Paddle de caracteristicas base
 	void NormalFire(); //Paddle de caracteristicas base
@@ -44,6 +46,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 		class USoundBase* FireSound; // sonido de disparo
+
+	UPROPERTY()
+		class AArkanoidGameModeBase* GMB;
 
 	UPROPERTY()
 		class ABrick* Brick; //Puntero a Brick
@@ -107,7 +112,11 @@ public:
 private:
 	// Punteros a las implementaciones de las capsulas
 	class APaddle_PlayerController* Controller;
-	class ABrickShield_* Reinforced;
+	TArray<ABrickShield_*> ReinforcedBricks;
+	ABrickShield_* Reinforced = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<ABrickShield_> BPBrickShield_;
 
 	//Funciones y variables de la capsula de shoot
 	float ShootTime; //Reinicio de disparo

@@ -17,6 +17,7 @@ void APaddle_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PaddleLocation = Cast<APaddle>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	TArray<AActor*> CameraActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), CameraActors);
 	FViewTargetTransitionParams Params;
@@ -33,25 +34,30 @@ void APaddle_PlayerController::DestroyBall()
 {
 	MyBall->Destroy();
 
-	if (ThreeBall1 != nullptr) {
-		ThreeBall1->Destroy();
-	}
-
-	if (ThreeBall2 != nullptr) {
-		ThreeBall2->Destroy();
-	}
-	if (ThreeBall3 != nullptr) {
-		ThreeBall3->Destroy();
-	}
-	
-	if (TwoBall1 != nullptr) {
-		TwoBall1->Destroy();
-	}
-
-	if (TwoBall2 != nullptr) {
-		TwoBall2->Destroy();
+	if (AllTwoBalls.Num()>0) {
+		for (ATwoBall* BallTwo : AllTwoBalls)
+		{
+			if (BallTwo)
+			{
+				BallTwo->Destroy();
+			}
+		}
+		AllTwoBalls.Empty();  // Limpiar la lista de instancias de TwoBall
 	}
 	
+	if (AllThreeBalls.Num() > 0) {
+		// Eliminar todas las instancias de ThreeBall
+		for (AThreeBall* BallThree : AllThreeBalls)
+		{
+			if (BallThree)
+			{
+				BallThree->Destroy();
+			}
+		}
+		AllThreeBalls.Empty();  // Limpiar la lista de instancias de TwoBall
+	}
+	
+
 }
 
 void APaddle_PlayerController::SetupInputComponent()
@@ -86,8 +92,10 @@ void APaddle_PlayerController::SpawnNewBall()
 		MyBall = nullptr;
 	}
 
+	FVector PLocation = PaddleLocation->GetActorLocation() + FVector(0.0f, 0.0f, 15.0f);
+
 	if (BallObj) {
-		MyBall = GetWorld()->SpawnActor<ABall>(BallObj, SpawnLocation, SpawnRotator, SpawnInfo0);
+		MyBall = GetWorld()->SpawnActor<ABall>(BallObj, PLocation, FRotator::ZeroRotator, SpawnInfo0);
 	}
 }
 
@@ -95,34 +103,37 @@ void APaddle_PlayerController::SpawnTwoBall()
 {
 	
 	FVector Location = MyBall->GetActorLocation();
-	TwoBall1 = GetWorld()->SpawnActor<ATwoBall>(TwoObj, Location, SpawnRotator);
-	TwoBall2 = GetWorld()->SpawnActor<ATwoBall>(TwoObj, Location, SpawnRotator);
+
+	for (int i = 0; i < 2; i++)
+	{
+		TwoBall = GetWorld()->SpawnActor<ATwoBall>(TwoObj, Location, FRotator::ZeroRotator);
+		if (TwoBall)
+		{
+			TwoBall->LaunchTwoBall();
+			AllTwoBalls.Add(TwoBall); // Agregar la nueva instancia al contenedor
+		}
+	}
 
 
-}
-
-void APaddle_PlayerController::LaunchTwo()
-{
-	TwoBall1->LaunchTwoBall();
-	TwoBall2->LaunchTwoBall();
 }
 
 void APaddle_PlayerController::SpawnThreeBall()
 {
 
 	FVector Location = MyBall->GetActorLocation();
-	ThreeBall1 = GetWorld()->SpawnActor<AThreeBall>(ThreeObj, Location, SpawnRotator);
-	ThreeBall2 = GetWorld()->SpawnActor<AThreeBall>(ThreeObj, Location, SpawnRotator);
-	ThreeBall3 = GetWorld()->SpawnActor<AThreeBall>(ThreeObj, Location, SpawnRotator);
-	
+
+	for (int i = 0; i < 2; i++)
+	{
+		ThreeBall = GetWorld()->SpawnActor<AThreeBall>(ThreeObj, Location, FRotator::ZeroRotator);
+		if (ThreeBall)
+		{
+			ThreeBall->LaunchThreeBall();
+			AllThreeBalls.Add(ThreeBall); // Agregar la nueva instancia al contenedor
+		}
+	}
 
 }
 
-void APaddle_PlayerController::LaunchThree()
-{
-	ThreeBall1->LaunchThreeBall();
-	ThreeBall2->LaunchThreeBall();
-	ThreeBall3->LaunchThreeBall();
-}
+
 
 

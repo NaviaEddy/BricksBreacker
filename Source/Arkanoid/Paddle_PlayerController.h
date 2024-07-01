@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,6 +7,7 @@
 class ABall;
 class ATwoBall;
 class AThreeBall;
+class APaddle;
 
 /**
  * 
@@ -22,7 +22,7 @@ public:
 	APaddle_PlayerController();
 
 	UFUNCTION()
-		virtual void SetupInputComponent() override; //Funcion virtual al componente de entrada de configuración
+		virtual void SetupInputComponent() override; //Funcion virtual al componente de entrada de configuraciï¿½n
 
 protected:
 
@@ -41,13 +41,11 @@ protected:
 
 
 	ABall* MyBall; //Puntero a Ball
-	AThreeBall* ThreeBall1 = nullptr; //Puntero a TheeBall
-	AThreeBall* ThreeBall2 = nullptr;
-	AThreeBall* ThreeBall3 = nullptr;
-	ATwoBall* TwoBall1 = nullptr; //Puntero a TwoBall
-	ATwoBall* TwoBall2 = nullptr;
-	FVector SpawnLocation = FVector(0.0f, 0.0f, 95.0f); //Vector de creacion
-	FRotator SpawnRotator = FRotator(0.0f, 0.0f, 0.0f); //Vector de rotacion
+	TArray<AThreeBall*> AllThreeBalls; // Contenedor para todas las instancias de TwoBall
+	AThreeBall* ThreeBall = nullptr; //Puntero a TheeBall
+	TArray<ATwoBall*> AllTwoBalls; // Contenedor para todas las instancias de TwoBall
+	ATwoBall* TwoBall = nullptr; //Puntero a TwoBall
+	APaddle* PaddleLocation; //Puntero a Paddle 
 	FActorSpawnParameters SpawnInfo0; //Parametros de spawn
 
 	void MoveHorizontal(float _AxisValue); //Funcion de movilidad del paddle
@@ -62,11 +60,7 @@ public:
 
 	 void SpawnTwoBall(); //Funcion de creacion de twoball
 
-	 void LaunchTwo(); //Funcion de lanzamiento de twoball
-
 	 void SpawnThreeBall(); //Funcion de creacion de threeball
-
-	 void LaunchThree(); //Funcion de lanzamiento de threeball
 
 	 void DestroyBall(); //Funcion de destuccion de balls
 };
